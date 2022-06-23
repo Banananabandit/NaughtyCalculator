@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         val buttonClear = findViewById<Button>(R.id.buttonClear)
         val buttonEnter = findViewById<Button>(R.id.buttonEnter)
 
+        setListeners()
         //Operators
         buttonMultiply.setOnClickListener{
             // If the variable is a nullable then we always need to use the let- to make sure that the code only executes if its not null
@@ -73,6 +74,24 @@ class MainActivity : AppCompatActivity() {
                     numbersDisplay?.append("-")
                     lastNumIsNumber = false
                     lastNumIsDot = false
+                }
+            }
+        }
+
+        buttonEnter.setOnClickListener {
+            if (lastNumIsNumber) {
+                // .text is a char sequence, this is why we need to convert it to String to do the operations
+                val numbersDisplayValue = numbersDisplay?.text?.toString()
+                // the String operations is something that potentially can go wrong so hence we have to use try/catch block
+                try {
+                    val splitDisplayValue = numbersDisplayValue?.split("-")
+                    var firstValue = splitDisplayValue?.get(0)
+                    var secondValue = splitDisplayValue?.get(1)
+
+                    numbersDisplay?.text = (firstValue!!.toDouble() - secondValue!!.toDouble()).toString()
+
+                } catch (e: ArithmeticException) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -148,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             lastNumIsDot = false
         }
     }
-    fun isOperatorUsed(value : String) : Boolean {
+    private fun isOperatorUsed(value : String) : Boolean {
         return if (value.startsWith("-")){
             false
         } else {
@@ -158,6 +177,9 @@ class MainActivity : AppCompatActivity() {
                     || value.contains("-")
             // These will return true. The logic here is that it will allow us using negative numbers for the operations
         }
+    }
+    private fun setListeners() {
+
     }
 
 }
