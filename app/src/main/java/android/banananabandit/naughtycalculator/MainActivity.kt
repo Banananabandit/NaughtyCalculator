@@ -7,7 +7,26 @@ import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    var numbersDisplay : TextView? = null
+    private var numbersDisplay : TextView? = null
+
+    private lateinit var buttonOne : Button
+    private lateinit var buttonTwo : Button
+    private lateinit var buttonThree : Button
+    private lateinit var buttonFour : Button
+    private lateinit var buttonFive : Button
+    private lateinit var buttonSix : Button
+    private lateinit var buttonSeven : Button
+    private lateinit var buttonEight : Button
+    private lateinit var buttonNine : Button
+    private lateinit var buttonZero : Button
+    private lateinit var buttonMultiply : Button
+    private lateinit var buttonDivide : Button
+    private lateinit var buttonAdd : Button
+    private lateinit var buttonSubtract : Button
+    private lateinit var buttonDot : Button
+    private lateinit var buttonDelete : Button
+    private lateinit var buttonClear : Button
+    private lateinit var buttonEnter : Button
 
     //These are the flags
     var lastNumIsDot : Boolean = false
@@ -19,27 +38,41 @@ class MainActivity : AppCompatActivity() {
 
         numbersDisplay = findViewById(R.id.numbersDisplay)
 
-        val buttonOne = findViewById<Button>(R.id.buttonOne)
-        val buttonTwo = findViewById<Button>(R.id.buttonTwo)
-        val buttonThree = findViewById<Button>(R.id.buttonThree)
-        val buttonFour = findViewById<Button>(R.id.buttonFour)
-        val buttonFive = findViewById<Button>(R.id.buttonFive)
-        val buttonSix = findViewById<Button>(R.id.buttonSix)
-        val buttonSeven = findViewById<Button>(R.id.buttonSeven)
-        val buttonEight = findViewById<Button>(R.id.buttonEight)
-        val buttonNine = findViewById<Button>(R.id.buttonNein)
-        val buttonZero = findViewById<Button>(R.id.buttonZero)
-        val buttonMultiply = findViewById<Button>(R.id.buttonMultiply)
-        val buttonDivide = findViewById<Button>(R.id.buttonDivide)
-        val buttonAdd = findViewById<Button>(R.id.buttonAdd)
-        val buttonSubtract = findViewById<Button>(R.id.buttonMinus)
-        val buttonDot = findViewById<Button>(R.id.buttonDot)
-        val buttonDelete = findViewById<Button>(R.id.buttonDelete)
-        val buttonClear = findViewById<Button>(R.id.buttonClear)
-        val buttonEnter = findViewById<Button>(R.id.buttonEnter)
+        buttonOne = findViewById(R.id.buttonOne)
+        buttonTwo = findViewById(R.id.buttonTwo)
+        buttonThree = findViewById(R.id.buttonThree)
+        buttonFour = findViewById(R.id.buttonFour)
+        buttonFive = findViewById(R.id.buttonFive)
+        buttonSix = findViewById(R.id.buttonSix)
+        buttonSeven = findViewById(R.id.buttonSeven)
+        buttonEight = findViewById(R.id.buttonEight)
+        buttonNine = findViewById(R.id.buttonNein)
+        buttonZero = findViewById(R.id.buttonZero)
+        buttonMultiply = findViewById(R.id.buttonMultiply)
+        buttonDivide = findViewById(R.id.buttonDivide)
+        buttonAdd = findViewById(R.id.buttonAdd)
+        buttonSubtract = findViewById(R.id.buttonMinus)
+        buttonDot = findViewById(R.id.buttonDot)
+        buttonDelete = findViewById(R.id.buttonDelete)
+        buttonClear = findViewById(R.id.buttonClear)
+        buttonEnter = findViewById(R.id.buttonEnter)
 
         setListeners()
-        //Operators
+    }
+    private fun isOperatorUsed(value : String) : Boolean {
+        return if (value.startsWith("-")){
+            false
+        } else {
+            value.contains("/")
+                    || value.contains("*")
+                    || value.contains("+")
+                    || value.contains("-")
+            // These will return true. The logic here is that it will allow us using negative numbers for the operations
+        }
+    }
+    private fun setListeners() {
+
+        // Operators
         buttonMultiply.setOnClickListener{
             // If the variable is a nullable then we always need to use the let- to make sure that the code only executes if its not null
             numbersDisplay?.text?.let {
@@ -81,11 +114,11 @@ class MainActivity : AppCompatActivity() {
         buttonEnter.setOnClickListener {
             if (lastNumIsNumber) {
                 // .text is a char sequence, this is why we need to convert it to String to do the operations
-                var numbersDisplayValue = numbersDisplay?.text?.toString()
+                var numbersDisplayValue = numbersDisplay?.text.toString()
                 var prefix = ""
                 // the String operations is something that potentially can go wrong so hence we have to use try/catch block
                 try {
-                    if (numbersDisplayValue!!.startsWith("-")) {
+                    if (numbersDisplayValue.startsWith("-")) {
                         prefix = "-"
                         // Substring method will get rid of the first character in the string
                         numbersDisplayValue = numbersDisplayValue.substring(1)
@@ -94,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
                         val splitDisplayValue = numbersDisplayValue.split("-")
                         var firstValue = splitDisplayValue[0]
-                        var secondValue = splitDisplayValue[1]
+                        val secondValue = splitDisplayValue[1]
 
                         if (prefix.isNotEmpty()) {
                             firstValue = prefix + firstValue
@@ -105,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
                         val splitDisplayValue = numbersDisplayValue.split("+")
                         var firstValue = splitDisplayValue[0]
-                        var secondValue = splitDisplayValue[1]
+                        val secondValue = splitDisplayValue[1]
 
                         if (prefix.isNotEmpty()) {
                             firstValue = prefix + firstValue
@@ -116,7 +149,7 @@ class MainActivity : AppCompatActivity() {
 
                         val splitDisplayValue = numbersDisplayValue.split("x")
                         var firstValue = splitDisplayValue[0]
-                        var secondValue = splitDisplayValue[1]
+                        val secondValue = splitDisplayValue[1]
 
                         if (prefix.isNotEmpty()) {
                             firstValue = prefix + firstValue
@@ -127,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
                         val splitDisplayValue = numbersDisplayValue.split("/")
                         var firstValue = splitDisplayValue[0]
-                        var secondValue = splitDisplayValue[1]
+                        val secondValue = splitDisplayValue[1]
 
                         if (prefix.isNotEmpty()) {
                             firstValue = prefix + firstValue
@@ -196,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         }
         buttonDot.setOnClickListener{
             if (lastNumIsNumber && !lastNumIsDot){
-                if (!numbersDisplay!!.text.contains(".")){
+                if (numbersDisplay?.text?.contains(".") != true){ 
                     numbersDisplay?.append(".")
                     lastNumIsNumber = false
                     lastNumIsDot = true
@@ -212,20 +245,6 @@ class MainActivity : AppCompatActivity() {
             lastNumIsNumber = true
             lastNumIsDot = false
         }
-    }
-    private fun isOperatorUsed(value : String) : Boolean {
-        return if (value.startsWith("-")){
-            false
-        } else {
-            value.contains("/")
-                    || value.contains("*")
-                    || value.contains("+")
-                    || value.contains("-")
-            // These will return true. The logic here is that it will allow us using negative numbers for the operations
-        }
-    }
-    private fun setListeners() {
-
     }
 
 }
