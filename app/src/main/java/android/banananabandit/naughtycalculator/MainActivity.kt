@@ -81,14 +81,60 @@ class MainActivity : AppCompatActivity() {
         buttonEnter.setOnClickListener {
             if (lastNumIsNumber) {
                 // .text is a char sequence, this is why we need to convert it to String to do the operations
-                val numbersDisplayValue = numbersDisplay?.text?.toString()
+                var numbersDisplayValue = numbersDisplay?.text?.toString()
+                var prefix = ""
                 // the String operations is something that potentially can go wrong so hence we have to use try/catch block
                 try {
-                    val splitDisplayValue = numbersDisplayValue?.split("-")
-                    var firstValue = splitDisplayValue?.get(0)
-                    var secondValue = splitDisplayValue?.get(1)
+                    if (numbersDisplayValue!!.startsWith("-")) {
+                        prefix = "-"
+                        // Substring method will get rid of the first character in the string
+                        numbersDisplayValue = numbersDisplayValue.substring(1)
+                    }
+                    if (numbersDisplayValue.contains("-")) {
 
-                    numbersDisplay?.text = (firstValue!!.toDouble() - secondValue!!.toDouble()).toString()
+                        val splitDisplayValue = numbersDisplayValue.split("-")
+                        var firstValue = splitDisplayValue[0]
+                        var secondValue = splitDisplayValue[1]
+
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        numbersDisplay?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
+                    } else if (numbersDisplayValue.contains("+")) {
+
+                        val splitDisplayValue = numbersDisplayValue.split("+")
+                        var firstValue = splitDisplayValue[0]
+                        var secondValue = splitDisplayValue[1]
+
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        numbersDisplay?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
+                    } else if (numbersDisplayValue.contains("x")) {
+
+                        val splitDisplayValue = numbersDisplayValue.split("x")
+                        var firstValue = splitDisplayValue[0]
+                        var secondValue = splitDisplayValue[1]
+
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        numbersDisplay?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
+                    } else if (numbersDisplayValue.contains("/")) {
+
+                        val splitDisplayValue = numbersDisplayValue.split("/")
+                        var firstValue = splitDisplayValue[0]
+                        var secondValue = splitDisplayValue[1]
+
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        numbersDisplay?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
+                    }
 
                 } catch (e: ArithmeticException) {
                     e.printStackTrace()
