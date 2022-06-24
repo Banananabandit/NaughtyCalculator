@@ -2,12 +2,12 @@ package android.banananabandit.naughtycalculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    private var numbersDisplay : TextView? = null
+    private var numbersDisplayResult : TextView? = null
+    private var numbersDisplayWorkings : TextView? = null
     private var naughtyDisplay : TextView? = null
 
     private lateinit var buttonOne : Button
@@ -33,11 +33,14 @@ class MainActivity : AppCompatActivity() {
     var lastNumIsDot : Boolean = false
     var lastNumIsNumber : Boolean = false
 
+    private lateinit var prefix : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        numbersDisplay = findViewById(R.id.numbersDisplay)
+        numbersDisplayResult = findViewById(R.id.numbersDisplayResult)
+        numbersDisplayWorkings = findViewById(R.id.numbersDisplayWorkings)
         naughtyDisplay = findViewById(R.id.naughtyDisplay)
 
         buttonOne = findViewById(R.id.buttonOne)
@@ -62,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         setListeners()
     }
     private fun naughtyCalculation() {
-        val numbersDisplayValue = numbersDisplay?.text.toString()
+        val numbersDisplayValue = numbersDisplayResult?.text.toString()
 
         if (numbersDisplayValue.toDouble() > 0) {
             if (numbersDisplayValue.toDouble() == 80085.0) {
@@ -97,41 +100,58 @@ class MainActivity : AppCompatActivity() {
             // These will return true. The logic here is that it will allow us using negative numbers for the operations
         }
     }
+
+    private fun generateResult() {
+
+    }
+    
+    private fun subtractFunction(numbersDisplayValue : String) {
+        val splitDisplayValue = numbersDisplayValue.split("-")
+        var firstValue = splitDisplayValue[0]
+        val secondValue = splitDisplayValue[1]
+
+        if (prefix.isNotEmpty()) {
+            firstValue = prefix + firstValue
+        }
+
+        numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
+    }
+
     private fun setListeners() {
 
         // Operators
         buttonMultiply.setOnClickListener{
             // If the variable is a nullable then we always need to use the let- to make sure that the code only executes if its not null
-            numbersDisplay?.text?.let {
+            numbersDisplayWorkings?.text?.let {
                 if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplay?.append("x")
+                    numbersDisplayWorkings?.append("x")
                     lastNumIsNumber = false
                     lastNumIsDot = false
                 }
             }
         }
         buttonDivide.setOnClickListener {
-            numbersDisplay?.text?.let {
+            numbersDisplayWorkings?.text?.let {
                 if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplay?.append("/")
+                    numbersDisplayWorkings?.append("/")
                     lastNumIsNumber = false
                     lastNumIsDot = false
                 }
             }
         }
         buttonAdd.setOnClickListener {
-            numbersDisplay?.text?.let {
+            numbersDisplayWorkings?.text?.let {
                 if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplay?.append("+")
+                    numbersDisplayWorkings?.append("+")
                     lastNumIsNumber = false
                     lastNumIsDot = false
                 }
             }
         }
         buttonSubtract.setOnClickListener {
-            numbersDisplay?.text?.let {
+            numbersDisplayWorkings?.text?.let {
                 if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplay?.append("-")
+                    numbersDisplayWorkings?.append("-")
                     lastNumIsNumber = false
                     lastNumIsDot = false
                 }
@@ -141,8 +161,8 @@ class MainActivity : AppCompatActivity() {
         buttonEnter.setOnClickListener {
             if (lastNumIsNumber) {
                 // .text is a char sequence, this is why we need to convert it to String to do the operations
-                var numbersDisplayValue = numbersDisplay?.text.toString()
-                var prefix = ""
+                var numbersDisplayValue = numbersDisplayWorkings?.text.toString()
+                prefix = ""
                 // the String operations is something that potentially can go wrong so hence we have to use try/catch block
                 try {
                     if (numbersDisplayValue.startsWith("-")) {
@@ -151,16 +171,9 @@ class MainActivity : AppCompatActivity() {
                         numbersDisplayValue = numbersDisplayValue.substring(1)
                     }
                     if (numbersDisplayValue.contains("-")) {
+      // You are here
+                        subtractFunction(numbersDisplayValue)
 
-                        val splitDisplayValue = numbersDisplayValue.split("-")
-                        var firstValue = splitDisplayValue[0]
-                        val secondValue = splitDisplayValue[1]
-
-                        if (prefix.isNotEmpty()) {
-                            firstValue = prefix + firstValue
-                        }
-
-                        numbersDisplay?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
                     } else if (numbersDisplayValue.contains("+")) {
 
                         val splitDisplayValue = numbersDisplayValue.split("+")
@@ -171,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                             firstValue = prefix + firstValue
                         }
 
-                        numbersDisplay?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
+                        numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
                     } else if (numbersDisplayValue.contains("x")) {
 
                         val splitDisplayValue = numbersDisplayValue.split("x")
@@ -182,7 +195,7 @@ class MainActivity : AppCompatActivity() {
                             firstValue = prefix + firstValue
                         }
 
-                        numbersDisplay?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
+                        numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
                     } else if (numbersDisplayValue.contains("/")) {
 
                         val splitDisplayValue = numbersDisplayValue.split("/")
@@ -193,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                             firstValue = prefix + firstValue
                         }
 
-                        numbersDisplay?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
+                        numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
                     }
 
                 } catch (e: ArithmeticException) {
@@ -206,71 +219,76 @@ class MainActivity : AppCompatActivity() {
 
         //Numbers
         buttonOne.setOnClickListener{
-            numbersDisplay?.append("1")
+            numbersDisplayWorkings?.append("1")
             lastNumIsNumber = true
             lastNumIsDot = false
+            // Method to start automatically generate result (constantly updating)
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString())) {
+
+            }
         }
         buttonTwo.setOnClickListener{
-            numbersDisplay?.append("2")
+            numbersDisplayWorkings?.append("2")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonThree.setOnClickListener{
-            numbersDisplay?.append("3")
+            numbersDisplayWorkings?.append("3")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonFour.setOnClickListener{
-            numbersDisplay?.append("4")
+            numbersDisplayWorkings?.append("4")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonFive.setOnClickListener{
-            numbersDisplay?.append("5")
+            numbersDisplayWorkings?.append("5")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonSix.setOnClickListener{
-            numbersDisplay?.append("6")
+            numbersDisplayWorkings?.append("6")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonSeven.setOnClickListener{
-            numbersDisplay?.append("7")
+            numbersDisplayWorkings?.append("7")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonEight.setOnClickListener{
-            numbersDisplay?.append("8")
+            numbersDisplayWorkings?.append("8")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonNine.setOnClickListener{
-            numbersDisplay?.append("9")
+            numbersDisplayWorkings?.append("9")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonZero.setOnClickListener{
-            numbersDisplay?.append("0")
+            numbersDisplayWorkings?.append("0")
             lastNumIsNumber = true
             lastNumIsDot = false
         }
         buttonDot.setOnClickListener{
             if (lastNumIsNumber && !lastNumIsDot){
-                if (numbersDisplay?.text?.contains(".") != true){
-                    numbersDisplay?.append(".")
+                if (numbersDisplayWorkings?.text?.contains(".") != true){
+                    numbersDisplayWorkings?.append(".")
                     lastNumIsNumber = false
                     lastNumIsDot = true
                 }
             }
         }
         buttonClear.setOnClickListener{
-            numbersDisplay?.text = ""
+            numbersDisplayResult?.text = ""
+            numbersDisplayWorkings?.text = ""
             naughtyDisplay?.text = ""
         }
         buttonDelete.setOnClickListener {
-            val deleteLastChar = numbersDisplay?.text?.dropLast(1)
-            numbersDisplay?.text = deleteLastChar
+            val deleteLastChar = numbersDisplayWorkings?.text?.dropLast(1)
+            numbersDisplayWorkings?.text = deleteLastChar
             lastNumIsNumber = true
             lastNumIsDot = false
         }
