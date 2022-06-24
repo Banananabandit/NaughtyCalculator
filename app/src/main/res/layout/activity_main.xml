@@ -7,7 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:id="@+id/naughtyDisplay"
+        android:padding="8dp"
+        android:background="@color/grey"
+        />
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/numbersDisplay"
@@ -15,7 +22,6 @@
         android:gravity="end|bottom"
         android:textSize="56sp"
         android:padding="8dp"
-        android:text="6666666"
         android:background="@color/grey"
         />
     <LinearLayout

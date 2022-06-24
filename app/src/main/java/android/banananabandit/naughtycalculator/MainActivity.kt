@@ -8,6 +8,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
     private var numbersDisplay : TextView? = null
+    private var naughtyDisplay : TextView? = null
 
     private lateinit var buttonOne : Button
     private lateinit var buttonTwo : Button
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         numbersDisplay = findViewById(R.id.numbersDisplay)
+        naughtyDisplay = findViewById(R.id.naughtyDisplay)
 
         buttonOne = findViewById(R.id.buttonOne)
         buttonTwo = findViewById(R.id.buttonTwo)
@@ -59,6 +61,31 @@ class MainActivity : AppCompatActivity() {
 
         setListeners()
     }
+    private fun naughtyCalculation() {
+        val numbersDisplayValue = numbersDisplay?.text.toString()
+
+        if (numbersDisplayValue.toDouble() > 0) {
+            if (numbersDisplayValue.toDouble() == 80085.0) {
+                naughtyDisplay?.text = "NOICE!"
+            } else if (numbersDisplayValue.toDouble() < 500) {
+                val adjustedValue = (80085 / numbersDisplayValue.toDouble()) - 53.0
+
+                naughtyDisplay?.text = "Nice! Now nultiply by $adjustedValue"
+
+            } else if (numbersDisplayValue.toDouble() > 5000) {
+                if (numbersDisplayValue.toDouble() < 80085.0) {
+                    val adjustedValue = 80085 - numbersDisplayValue.toDouble()
+
+                    naughtyDisplay?.text = "Awesome! Now add $adjustedValue"
+                } else if (numbersDisplayValue.toDouble() > 80086.0) {
+                    val adjustedValue = numbersDisplayValue.toDouble() - 80085
+
+                    naughtyDisplay?.text = "Now subtruct $adjustedValue"
+            }
+            }
+        }
+    }
+
     private fun isOperatorUsed(value : String) : Boolean {
         return if (value.startsWith("-")){
             false
@@ -172,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: ArithmeticException) {
                     e.printStackTrace()
                 }
+                naughtyCalculation()
             }
         }
 
@@ -229,7 +257,7 @@ class MainActivity : AppCompatActivity() {
         }
         buttonDot.setOnClickListener{
             if (lastNumIsNumber && !lastNumIsDot){
-                if (numbersDisplay?.text?.contains(".") != true){ 
+                if (numbersDisplay?.text?.contains(".") != true){
                     numbersDisplay?.append(".")
                     lastNumIsNumber = false
                     lastNumIsDot = true
@@ -238,6 +266,7 @@ class MainActivity : AppCompatActivity() {
         }
         buttonClear.setOnClickListener{
             numbersDisplay?.text = ""
+            naughtyDisplay?.text = ""
         }
         buttonDelete.setOnClickListener {
             val deleteLastChar = numbersDisplay?.text?.dropLast(1)
