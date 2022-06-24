@@ -104,54 +104,23 @@ class MainActivity : AppCompatActivity() {
     private fun generateResult() {
 
     }
-    private fun subtractFunction(numbersDisplayValue : String, operator : String) {
-        val splitDisplayValue = numbersDisplayValue.split("-")
+    private fun operatorFunction(numbersDisplayValue : String, operator : String) {
+        val splitDisplayValue = numbersDisplayValue.split(operator)
         var firstValue = splitDisplayValue[0]
         val secondValue = splitDisplayValue[1]
 
         if (prefix.isNotEmpty()) {
             firstValue = prefix + firstValue
         }
-
-        numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
-    }
-    private fun additionFunction(numbersDisplayValue: String) {
-        val splitDisplayValue = numbersDisplayValue.split("+")
-        var firstValue = splitDisplayValue[0]
-        val secondValue = splitDisplayValue[1]
-
-        if (prefix.isNotEmpty()) {
-            firstValue = prefix + firstValue
+        when(operator) {
+            "-" -> numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
+            "+" -> numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
+            "x" -> numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
+            "/" -> numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
         }
 
-        numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
     }
 
-
-    private fun multiplicationFunction(numbersDisplayValue: String) {
-        val splitDisplayValue = numbersDisplayValue.split("x")
-        var firstValue = splitDisplayValue[0]
-        val secondValue = splitDisplayValue[1]
-
-        if (prefix.isNotEmpty()) {
-            firstValue = prefix + firstValue
-        }
-
-        numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
-    }
-
-    private fun divisionFunction(numbersDisplayValue: String) {
-
-        val splitDisplayValue = numbersDisplayValue.split("/")
-        var firstValue = splitDisplayValue[0]
-        val secondValue = splitDisplayValue[1]
-
-        if (prefix.isNotEmpty()) {
-            firstValue = prefix + firstValue
-        }
-
-        numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
-    }
 
     private fun setListeners() {
 
@@ -207,16 +176,16 @@ class MainActivity : AppCompatActivity() {
                         numbersDisplayValue = numbersDisplayValue.substring(1)
                     }
                     if (numbersDisplayValue.contains("-")) {
-                        subtractFunction(numbersDisplayValue, "-")
+                        operatorFunction(numbersDisplayValue, "-")
 
                     } else if (numbersDisplayValue.contains("+")) {
-                        additionFunction(numbersDisplayValue)
+                        operatorFunction(numbersDisplayValue, "+")
 
                     } else if (numbersDisplayValue.contains("x")) {
-                        multiplicationFunction(numbersDisplayValue)
+                        operatorFunction(numbersDisplayValue, "x")
 
                     } else if (numbersDisplayValue.contains("/")) {
-                        divisionFunction(numbersDisplayValue)
+                        operatorFunction(numbersDisplayValue, "/")
                     }
 
                 } catch (e: ArithmeticException) {
