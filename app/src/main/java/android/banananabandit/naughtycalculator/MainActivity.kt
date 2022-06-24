@@ -104,8 +104,7 @@ class MainActivity : AppCompatActivity() {
     private fun generateResult() {
 
     }
-    
-    private fun subtractFunction(numbersDisplayValue : String) {
+    private fun subtractFunction(numbersDisplayValue : String, operator : String) {
         val splitDisplayValue = numbersDisplayValue.split("-")
         var firstValue = splitDisplayValue[0]
         val secondValue = splitDisplayValue[1]
@@ -115,6 +114,43 @@ class MainActivity : AppCompatActivity() {
         }
 
         numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
+    }
+    private fun additionFunction(numbersDisplayValue: String) {
+        val splitDisplayValue = numbersDisplayValue.split("+")
+        var firstValue = splitDisplayValue[0]
+        val secondValue = splitDisplayValue[1]
+
+        if (prefix.isNotEmpty()) {
+            firstValue = prefix + firstValue
+        }
+
+        numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
+    }
+
+
+    private fun multiplicationFunction(numbersDisplayValue: String) {
+        val splitDisplayValue = numbersDisplayValue.split("x")
+        var firstValue = splitDisplayValue[0]
+        val secondValue = splitDisplayValue[1]
+
+        if (prefix.isNotEmpty()) {
+            firstValue = prefix + firstValue
+        }
+
+        numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
+    }
+
+    private fun divisionFunction(numbersDisplayValue: String) {
+
+        val splitDisplayValue = numbersDisplayValue.split("/")
+        var firstValue = splitDisplayValue[0]
+        val secondValue = splitDisplayValue[1]
+
+        if (prefix.isNotEmpty()) {
+            firstValue = prefix + firstValue
+        }
+
+        numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
     }
 
     private fun setListeners() {
@@ -171,42 +207,16 @@ class MainActivity : AppCompatActivity() {
                         numbersDisplayValue = numbersDisplayValue.substring(1)
                     }
                     if (numbersDisplayValue.contains("-")) {
-      // You are here
-                        subtractFunction(numbersDisplayValue)
+                        subtractFunction(numbersDisplayValue, "-")
 
                     } else if (numbersDisplayValue.contains("+")) {
+                        additionFunction(numbersDisplayValue)
 
-                        val splitDisplayValue = numbersDisplayValue.split("+")
-                        var firstValue = splitDisplayValue[0]
-                        val secondValue = splitDisplayValue[1]
-
-                        if (prefix.isNotEmpty()) {
-                            firstValue = prefix + firstValue
-                        }
-
-                        numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
                     } else if (numbersDisplayValue.contains("x")) {
+                        multiplicationFunction(numbersDisplayValue)
 
-                        val splitDisplayValue = numbersDisplayValue.split("x")
-                        var firstValue = splitDisplayValue[0]
-                        val secondValue = splitDisplayValue[1]
-
-                        if (prefix.isNotEmpty()) {
-                            firstValue = prefix + firstValue
-                        }
-
-                        numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
                     } else if (numbersDisplayValue.contains("/")) {
-
-                        val splitDisplayValue = numbersDisplayValue.split("/")
-                        var firstValue = splitDisplayValue[0]
-                        val secondValue = splitDisplayValue[1]
-
-                        if (prefix.isNotEmpty()) {
-                            firstValue = prefix + firstValue
-                        }
-
-                        numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
+                        divisionFunction(numbersDisplayValue)
                     }
 
                 } catch (e: ArithmeticException) {
@@ -293,5 +303,6 @@ class MainActivity : AppCompatActivity() {
             lastNumIsDot = false
         }
     }
+
 
 }
