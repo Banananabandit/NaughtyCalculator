@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             false
         } else {
             value.contains("/")
-                    || value.contains("*")
+                    || value.contains("x")
                     || value.contains("+")
                     || value.contains("-")
             // These will return true. The logic here is that it will allow us using negative numbers for the operations
@@ -102,8 +102,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateResult() {
+        var numbersDisplayValue = numbersDisplayWorkings?.text.toString()
+        prefix = ""
+        try {
+            if (numbersDisplayValue.startsWith("-")) {
+                prefix = "-"
+                // Substring method will get rid of the first character in the string
+                numbersDisplayValue = numbersDisplayValue.substring(1)
+            }
+            if (numbersDisplayValue.contains("-")) {
+                operatorFunction(numbersDisplayValue, "-")
+
+            } else if (numbersDisplayValue.contains("+")) {
+            operatorFunction(numbersDisplayValue, "+")
+
+            } else if (numbersDisplayValue.contains("x")) {
+            operatorFunction(numbersDisplayValue, "x")
+
+            } else if (numbersDisplayValue.contains("/")) {
+            operatorFunction(numbersDisplayValue, "/")
+        }
+            naughtyCalculation()
+
+        } catch (e : java.lang.ArithmeticException){
+            e.printStackTrace()
+        }
+
 
     }
+
     private fun operatorFunction(numbersDisplayValue : String, operator : String) {
         val splitDisplayValue = numbersDisplayValue.split(operator)
         var firstValue = splitDisplayValue[0]
@@ -115,18 +142,16 @@ class MainActivity : AppCompatActivity() {
         when(operator) {
             "-" -> numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
             "+" -> numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
-            "x" -> numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
             "/" -> numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
+            "x" -> numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
         }
 
     }
 
 
     private fun setListeners() {
-
         // Operators
         buttonMultiply.setOnClickListener{
-            // If the variable is a nullable then we always need to use the let- to make sure that the code only executes if its not null
             numbersDisplayWorkings?.text?.let {
                 if (lastNumIsNumber && !isOperatorUsed(it.toString())){
                     numbersDisplayWorkings?.append("x")
@@ -164,35 +189,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonEnter.setOnClickListener {
-            if (lastNumIsNumber) {
-                // .text is a char sequence, this is why we need to convert it to String to do the operations
-                var numbersDisplayValue = numbersDisplayWorkings?.text.toString()
-                prefix = ""
-                // the String operations is something that potentially can go wrong so hence we have to use try/catch block
-                try {
-                    if (numbersDisplayValue.startsWith("-")) {
-                        prefix = "-"
-                        // Substring method will get rid of the first character in the string
-                        numbersDisplayValue = numbersDisplayValue.substring(1)
-                    }
-                    if (numbersDisplayValue.contains("-")) {
-                        operatorFunction(numbersDisplayValue, "-")
-
-                    } else if (numbersDisplayValue.contains("+")) {
-                        operatorFunction(numbersDisplayValue, "+")
-
-                    } else if (numbersDisplayValue.contains("x")) {
-                        operatorFunction(numbersDisplayValue, "x")
-
-                    } else if (numbersDisplayValue.contains("/")) {
-                        operatorFunction(numbersDisplayValue, "/")
-                    }
-
-                } catch (e: ArithmeticException) {
-                    e.printStackTrace()
-                }
-                naughtyCalculation()
-            }
+                var numbersDisplayValue = numbersDisplayResult?.text
+                numbersDisplayWorkings?.text = ""
+                numbersDisplayWorkings?.text = numbersDisplayValue
+                numbersDisplayResult?.text = ""
         }
 
 
@@ -202,54 +202,81 @@ class MainActivity : AppCompatActivity() {
             lastNumIsNumber = true
             lastNumIsDot = false
             // Method to start automatically generate result (constantly updating)
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString())) {
-
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
             }
         }
         buttonTwo.setOnClickListener{
             numbersDisplayWorkings?.append("2")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonThree.setOnClickListener{
             numbersDisplayWorkings?.append("3")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonFour.setOnClickListener{
             numbersDisplayWorkings?.append("4")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonFive.setOnClickListener{
             numbersDisplayWorkings?.append("5")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonSix.setOnClickListener{
             numbersDisplayWorkings?.append("6")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonSeven.setOnClickListener{
             numbersDisplayWorkings?.append("7")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonEight.setOnClickListener{
             numbersDisplayWorkings?.append("8")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonNine.setOnClickListener{
             numbersDisplayWorkings?.append("9")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonZero.setOnClickListener{
             numbersDisplayWorkings?.append("0")
             lastNumIsNumber = true
             lastNumIsDot = false
+            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
+                generateResult()
+            }
         }
         buttonDot.setOnClickListener{
             if (lastNumIsNumber && !lastNumIsDot){
