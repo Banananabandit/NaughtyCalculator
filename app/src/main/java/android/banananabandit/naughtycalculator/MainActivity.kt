@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import java.lang.ArithmeticException
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 
@@ -15,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private var numbersDisplayWorkings : TextView? = null
     private var naughtyDisplay : TextView? = null
     private var calculations = ""
+    var result : Double? = null
 
     private lateinit var buttonOne : Button
     private lateinit var buttonTwo : Button
@@ -34,12 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonDelete : Button
     private lateinit var buttonClear : Button
     private lateinit var buttonEnter : Button
-
-    //These are the flags
-    var lastNumIsDot : Boolean = false
-    var lastNumIsNumber : Boolean = false
-
-    private lateinit var prefix : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,17 +67,6 @@ class MainActivity : AppCompatActivity() {
         setListeners()
     }
 
-    // Leave this code for later use on another project
-//    private fun whatsApp() {
-//        val text = numbersDisplayWorkings?.text.toString()
-//        val intent = Intent()
-//        intent.action = Intent.ACTION_SEND
-//        intent.putExtra(Intent.EXTRA_TEXT, text)
-//        intent.type = "text/plain"
-//        intent.setPackage("com.whatsapp")
-//        startActivity(intent)
-//    }
-
     private fun setCalculations(givenValue : String) {
         calculations += givenValue
         numbersDisplayWorkings?.text = calculations
@@ -112,67 +97,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isOperatorUsed(value : String) : Boolean {
-        return if (value.startsWith("-")){
-            false
-        } else {
-            value.contains("/")
-                    || value.contains("x")
-                    || value.contains("+")
-                    || value.contains("-")
-            // These will return true. The logic here is that it will allow us using negative numbers for the operations
-        }
-    }
-
     private fun generateResult() {
-        var numbersDisplayValue = numbersDisplayWorkings?.text.toString()
-        prefix = ""
         try {
-            if (numbersDisplayValue.startsWith("-")) {
-                prefix = "-"
-                // Substring method will get rid of the first character in the string
-                numbersDisplayValue = numbersDisplayValue.substring(1)
-            }
-            if (numbersDisplayValue.contains("-")) {
-                operatorFunction(numbersDisplayValue, "-")
+            var calc = ScriptEngineManager().getEngineByName("rhino")
+            result = calc.eval(calculations) as Double?
 
-            } else if (numbersDisplayValue.contains("+")) {
-            operatorFunction(numbersDisplayValue, "+")
-
-            } else if (numbersDisplayValue.contains("x")) {
-            operatorFunction(numbersDisplayValue, "x")
-
-            } else if (numbersDisplayValue.contains("/")) {
-            operatorFunction(numbersDisplayValue, "/")
-        }
-            naughtyCalculation()
-
-        } catch (e : java.lang.ArithmeticException){
+            numbersDisplayResult?.text = result.toString()
+        } catch (e : ArithmeticException) {
             e.printStackTrace()
         }
 
 
     }
 
-    private fun operatorFunction(numbersDisplayValue : String, operator : String) {
-        val splitDisplayValue = numbersDisplayValue.split(operator)
-        var firstValue = splitDisplayValue[0]
-        val secondValue = splitDisplayValue[1]
-
-        if (prefix.isNotEmpty()) {
-            firstValue = prefix + firstValue
-        }
-        when(operator) {
-            "-" -> numbersDisplayResult?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
-            "+" -> numbersDisplayResult?.text = (firstValue.toDouble() + secondValue.toDouble()).toString()
-            "/" -> numbersDisplayResult?.text = (firstValue.toDouble() / secondValue.toDouble()).toString()
-            "x" -> numbersDisplayResult?.text = (firstValue.toDouble() * secondValue.toDouble()).toString()
-        }
-
-    }
-
-
     private fun setListeners() {
+
+        buttonEnter.setOnClickListener {
+            // When pressed, the result becomes workings
+            numbersDisplayWorkings?.text = ""
+            calculations = result.toString()
+            numbersDisplayWorkings?.text = calculations
+            numbersDisplayResult?.text = ""
+        }
         // Operators
         buttonMultiply.setOnClickListener{
             setCalculations("*")
@@ -187,46 +133,46 @@ class MainActivity : AppCompatActivity() {
             setCalculations("-")
         }
 
-        buttonEnter.setOnClickListener {
-            var result : Double? = null
-
-            var calc = ScriptEngineManager().getEngineByName("rhino")
-            result = calc.eval(calculations) as Double?
-
-            numbersDisplayResult?.text = result.toString()
-        }
-
-
         //Numbers
         buttonOne.setOnClickListener{
             setCalculations("1")
+            generateResult()
         }
         buttonTwo.setOnClickListener{
             setCalculations("2")
+            generateResult()
         }
         buttonThree.setOnClickListener{
             setCalculations("3")
+            generateResult()
         }
         buttonFour.setOnClickListener{
             setCalculations("4")
+            generateResult()
         }
         buttonFive.setOnClickListener{
             setCalculations("5")
+            generateResult()
         }
         buttonSix.setOnClickListener{
             setCalculations("6")
+            generateResult()
         }
         buttonSeven.setOnClickListener{
             setCalculations("7")
+            generateResult()
         }
         buttonEight.setOnClickListener{
             setCalculations("8")
+            generateResult()
         }
         buttonNine.setOnClickListener{
             setCalculations("9")
+            generateResult()
         }
         buttonZero.setOnClickListener{
             setCalculations("0")
+            generateResult()
         }
         buttonDot.setOnClickListener{
             setCalculations(".")
@@ -235,14 +181,33 @@ class MainActivity : AppCompatActivity() {
             numbersDisplayResult?.text = ""
             numbersDisplayWorkings?.text = ""
             naughtyDisplay?.text = ""
+            calculations = ""
         }
         buttonDelete.setOnClickListener {
             val deleteLastChar = numbersDisplayWorkings?.text?.dropLast(1)
+            val deleteLastCharWorkings = calculations.dropLast(1)
             numbersDisplayWorkings?.text = deleteLastChar
-            lastNumIsNumber = true
-            lastNumIsDot = false
+            calculations = deleteLastCharWorkings
+            if (!calculations.endsWith("+") &&
+                !calculations.endsWith("-") &&
+                !calculations.endsWith("/") &&
+                !calculations.endsWith("*")) {
+                generateResult()
+            }
         }
     }
+
+    // Leave this code for later use on another project
+//    private fun whatsApp() {
+//        val text = numbersDisplayWorkings?.text.toString()
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_SEND
+//        intent.putExtra(Intent.EXTRA_TEXT, text)
+//        intent.type = "text/plain"
+//        intent.setPackage("com.whatsapp")
+//        startActivity(intent)
+//    }
+
 
 
 }
