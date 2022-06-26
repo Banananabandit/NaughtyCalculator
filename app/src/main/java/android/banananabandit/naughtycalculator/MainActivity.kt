@@ -1,14 +1,20 @@
 package android.banananabandit.naughtycalculator
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import javax.script.ScriptEngine
+import javax.script.ScriptEngineManager
 
 class MainActivity : AppCompatActivity() {
     private var numbersDisplayResult : TextView? = null
     private var numbersDisplayWorkings : TextView? = null
     private var naughtyDisplay : TextView? = null
+    private var calculations = ""
 
     private lateinit var buttonOne : Button
     private lateinit var buttonTwo : Button
@@ -64,6 +70,23 @@ class MainActivity : AppCompatActivity() {
 
         setListeners()
     }
+
+    // Leave this code for later use on another project
+//    private fun whatsApp() {
+//        val text = numbersDisplayWorkings?.text.toString()
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_SEND
+//        intent.putExtra(Intent.EXTRA_TEXT, text)
+//        intent.type = "text/plain"
+//        intent.setPackage("com.whatsapp")
+//        startActivity(intent)
+//    }
+
+    private fun setCalculations(givenValue : String) {
+        calculations += givenValue
+        numbersDisplayWorkings?.text = calculations
+    }
+
     private fun naughtyCalculation() {
         val numbersDisplayValue = numbersDisplayResult?.text.toString()
 
@@ -152,140 +175,61 @@ class MainActivity : AppCompatActivity() {
     private fun setListeners() {
         // Operators
         buttonMultiply.setOnClickListener{
-            numbersDisplayWorkings?.text?.let {
-                if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplayWorkings?.append("x")
-                    lastNumIsNumber = false
-                    lastNumIsDot = false
-                }
-            }
+            setCalculations("*")
         }
         buttonDivide.setOnClickListener {
-            numbersDisplayWorkings?.text?.let {
-                if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplayWorkings?.append("/")
-                    lastNumIsNumber = false
-                    lastNumIsDot = false
-                }
-            }
+            setCalculations("/")
         }
         buttonAdd.setOnClickListener {
-            numbersDisplayWorkings?.text?.let {
-                if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplayWorkings?.append("+")
-                    lastNumIsNumber = false
-                    lastNumIsDot = false
-                }
-            }
+            setCalculations("+")
         }
         buttonSubtract.setOnClickListener {
-            numbersDisplayWorkings?.text?.let {
-                if (lastNumIsNumber && !isOperatorUsed(it.toString())){
-                    numbersDisplayWorkings?.append("-")
-                    lastNumIsNumber = false
-                    lastNumIsDot = false
-                }
-            }
+            setCalculations("-")
         }
 
         buttonEnter.setOnClickListener {
-                var numbersDisplayValue = numbersDisplayResult?.text
-                numbersDisplayWorkings?.text = ""
-                numbersDisplayWorkings?.text = numbersDisplayValue
-                numbersDisplayResult?.text = ""
+            var result : Double? = null
+
+            var calc = ScriptEngineManager().getEngineByName("rhino")
+            result = calc.eval(calculations) as Double?
+
+            numbersDisplayResult?.text = result.toString()
         }
 
 
         //Numbers
         buttonOne.setOnClickListener{
-            numbersDisplayWorkings?.append("1")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            // Method to start automatically generate result (constantly updating)
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("1")
         }
         buttonTwo.setOnClickListener{
-            numbersDisplayWorkings?.append("2")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("2")
         }
         buttonThree.setOnClickListener{
-            numbersDisplayWorkings?.append("3")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("3")
         }
         buttonFour.setOnClickListener{
-            numbersDisplayWorkings?.append("4")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("4")
         }
         buttonFive.setOnClickListener{
-            numbersDisplayWorkings?.append("5")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("5")
         }
         buttonSix.setOnClickListener{
-            numbersDisplayWorkings?.append("6")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("6")
         }
         buttonSeven.setOnClickListener{
-            numbersDisplayWorkings?.append("7")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("7")
         }
         buttonEight.setOnClickListener{
-            numbersDisplayWorkings?.append("8")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("8")
         }
         buttonNine.setOnClickListener{
-            numbersDisplayWorkings?.append("9")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("9")
         }
         buttonZero.setOnClickListener{
-            numbersDisplayWorkings?.append("0")
-            lastNumIsNumber = true
-            lastNumIsDot = false
-            if (isOperatorUsed(numbersDisplayWorkings?.text.toString()) && lastNumIsNumber) {
-                generateResult()
-            }
+            setCalculations("0")
         }
         buttonDot.setOnClickListener{
-            if (lastNumIsNumber && !lastNumIsDot){
-                if (numbersDisplayWorkings?.text?.contains(".") != true){
-                    numbersDisplayWorkings?.append(".")
-                    lastNumIsNumber = false
-                    lastNumIsDot = true
-                }
-            }
+            setCalculations(".")
         }
         buttonClear.setOnClickListener{
             numbersDisplayResult?.text = ""
