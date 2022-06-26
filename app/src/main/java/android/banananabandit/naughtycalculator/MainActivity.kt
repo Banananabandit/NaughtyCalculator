@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             } else if (numbersDisplayValue.toDouble() < 500) {
                 val adjustedValue = (80085 / numbersDisplayValue.toDouble()) - 53.0
 
-                naughtyDisplay?.text = "Nice! Now nultiply by $adjustedValue"
+                naughtyDisplay?.text = "Nice! Now multiply by $adjustedValue"
 
             } else if (numbersDisplayValue.toDouble() > 5000) {
                 if (numbersDisplayValue.toDouble() < 80085.0) {
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (numbersDisplayValue.toDouble() > 80086.0) {
                     val adjustedValue = numbersDisplayValue.toDouble() - 80085
 
-                    naughtyDisplay?.text = "Now subtruct $adjustedValue"
+                    naughtyDisplay?.text = "Now subtract $adjustedValue"
             }
             }
         }
@@ -106,14 +106,12 @@ class MainActivity : AppCompatActivity() {
         } catch (e : ArithmeticException) {
             e.printStackTrace()
         }
-
-
     }
 
     private fun setListeners() {
 
         buttonEnter.setOnClickListener {
-            // When pressed, the result becomes workings
+            naughtyCalculation()
             numbersDisplayWorkings?.text = ""
             calculations = result.toString()
             numbersDisplayWorkings?.text = calculations
@@ -196,18 +194,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    // Leave this code for later use on another project
-//    private fun whatsApp() {
-//        val text = numbersDisplayWorkings?.text.toString()
-//        val intent = Intent()
-//        intent.action = Intent.ACTION_SEND
-//        intent.putExtra(Intent.EXTRA_TEXT, text)
-//        intent.type = "text/plain"
-//        intent.setPackage("com.whatsapp")
-//        startActivity(intent)
-//    }
-
-
-
 }
